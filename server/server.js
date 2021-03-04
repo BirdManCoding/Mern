@@ -4,32 +4,24 @@ const cors = require("cors")
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
 
-
-
-( async() => {
+const postRoutes = require("./routes/postsRoutes");
     const app = express();
 
     app.use(cors());
     app.use(bodyParser.json());
 
-    app.get("/", (req, res, next) => res.send(`Der Port ist ${process.env.SERVER_PORT}`));
+    app.use("/api/posts/", postRoutes);
 
-    app.post("/", (req, res, next) => {
-        console.log(req.body);
-        res.status(200).send(true)
+    mongoose
+    .connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true,
     })
-
-    try{
-        await mongoose.connect(process.env.MONGO_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            useCreateIndex: true,
-        })
-    }catch(err){
-        throw new Error("An unknown error occurred")
-    }
-
-    app.listen(process.env.SERVER_PORT, () => {
-        console.log(`Server running on Port ${process.env.SERVER_PORT}`)
+    .then(() => {
+      app.listen(process.env.SERVER_PORT);
+      console.log("db and server are running");
+    })
+    .catch(err => {
+      throw new HttpError("An unknown error occurred!", 500);
     });
-})()
