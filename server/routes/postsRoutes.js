@@ -1,17 +1,16 @@
 const express = require('express')
 const router = express.Router()
 
-// @route   GET /api/posts/sample
-// @desc    sampleRoute
+const postControllers = require("../controllers/postsControllers")
+
+// @route   GET /api/posts/
+// @desc    get all Posts
 // @access  Public
-router.get("/sample", (req, res, next) => {
-    res.json({message: "Hallo von der Sample Route"});
-});
-// @route   GET /api/posts/sample
-// @desc    sampleRoute
+router.get("/", postControllers.getPosts);
+
+// @route   GET /api/posts/
+// @desc    send a Post
 // @access  Public
-router.post("/sample", (req, res, next) => {
-    res.json({content: req.body});
-});
+router.post("/", postControllers.sendPost);
 
 module.exports = router;
