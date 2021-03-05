@@ -1,30 +1,31 @@
-const Post = require("../models/Post")
+const Post = require("../models/Post");
+const HttpError = require("../models/HttpError");
 
-exports.getPosts =  async (req, res, next) => {
-    let posts;
+exports.getPosts = async (req, res, next) => {
+  let posts;
 
-    try {
-        posts = await Post.find({});
-      } catch (err) {
-        throw new Error(err);
-      }
+  try {
+    posts = await Post.find({});
+  } catch (err) {
+    next(new HttpError(err));
+  }
 
-    res.json(posts);
-}
+  if (posts.length === 0 || !posts) {
+    return next(new HttpError("No Posts found", 404));
+  }
 
-exports.sendPost =  async (req, res, next) => {
+  res.json(posts);
+};
 
-    const post = new Post({...req.body});
-    
-    let response;
-    try{
-       response = await post.save();
-    }catch(err){
-        throw new Error(err);
-    }
+exports.sendPost = async (req, res, next) => {
+  const post = new Post({ ...req.body });
 
+  let response;
+  try {
+    response = await post.save();
+  } catch (err) {
+    next(new HttpError(err));
+  }
 
-    res.json({createdPost: {response}});
-}
-
-
+  res.json(response);
+};
