@@ -1,3 +1,5 @@
+const { validationResult } = require("express-validator");
+
 const Post = require("../models/Post");
 const HttpError = require("../models/HttpError");
 
@@ -18,6 +20,11 @@ exports.getPosts = async (req, res, next) => {
 };
 
 exports.sendPost = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(new HttpError("Invalid inputs passed", 422));
+  }
+
   const post = new Post({ ...req.body });
 
   let response;

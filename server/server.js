@@ -14,8 +14,7 @@ app.use(bodyParser.json());
 app.use("/api/posts/", postRoutes);
 
 app.use((error, req, res, next) => {
-  console.log(res.headerSent);
-  if (res.headerSent) return next(error);
+  if (res.headersSent) return next(error);
   res
     .status(error.code || 500)
     .json({ message: error.message || "An unknown error occurred" });
