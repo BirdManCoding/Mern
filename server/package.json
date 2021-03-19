@@ -15,7 +15,12 @@
     "express": "^4.17.1",
     "express-validator": "^6.10.0",
     "mongodb": "^3.6.3",
-    "mongoose": "^5.11.15"
+    "mongoose": "^5.11.15",
+    "multer": "^2.0.0-rc.1",
+    "util": "^0.12.3",
+    "util.promisify": "^1.1.1",
+    "utils": "^0.3.1",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "dotenv": "^8.2.0",

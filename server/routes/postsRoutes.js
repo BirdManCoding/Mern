@@ -1,9 +1,11 @@
 const { Router } = require("express");
+const multer = require("multer");
 
 const { postValidator } = require("../middlewares/postValidation");
 const postControllers = require("../controllers/postsControllers");
 
 const router = Router();
+const upload = multer();
 
 // @route   GET /api/posts/
 // @desc    get all Posts
@@ -23,11 +25,16 @@ router.delete("/:id", postControllers.deletePost);
 // @route   PATCH /api/posts/:id
 // @desc    delete single Post by Id
 // @access  Public
-router.patch("/:id", postValidator(), postControllers.updatePost);
+router.patch("/:id", postValidator, postControllers.updatePost);
 
 // @route   POST /api/posts/
 // @desc    send a Post
 // @access  Public
-router.post("/", postValidator(), postControllers.sendPost);
+router.post(
+  "/",
+  upload.single("headerImage"),
+  postValidator,
+  postControllers.sendPost
+);
 
 module.exports = router;

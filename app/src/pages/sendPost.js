@@ -20,7 +20,7 @@ function reducer(state, action) {
     case ACTIONS.UPDATE_IMAGE:
       return { ...state, headerImage: action.payload.headerImage };
     case ACTIONS.CLEAR_CONTENT:
-      return { title: "", content: "", headerImage: "" };
+      return { title: "", content: "", headerImage: null };
     default:
       return state;
   }
@@ -30,19 +30,23 @@ function SendPost() {
   const [formState, dispatch] = useReducer(reducer, {
     title: "",
     content: "",
-    headerImage: "",
+    headerImage: null,
   });
 
   async function onSubmitHandler(e) {
     e.preventDefault();
 
-    let response;
+    const data = new FormData();
+    data.append("title", formState.title);
+    data.append("content", formState.content);
+    data.append("headerImage", formState.headerImage);
+
     try {
-      response = await axios.post("/api/posts/", { ...formState });
+      const response = await axios.post("/api/posts/", data);
+      console.log(response);
     } catch (err) {
-      console.log(err, err.message);
+      console.log(err.message);
     }
-    console.log(response);
 
     dispatch({ type: ACTIONS.CLEAR_CONTENT });
   }
@@ -79,17 +83,16 @@ function SendPost() {
           />
         </div>
         <div>
-          <TextField
+          <input
+            type='file'
             id='headerImage'
-            label='Bild url'
-            value={formState.headerImage}
             onChange={e =>
               dispatch({
                 type: ACTIONS.UPDATE_IMAGE,
-                payload: { headerImage: e.target.value },
+                payload: { headerImage: e.target.files[0] },
               })
             }
-          />
+          ></input>
         </div>
         <Button variant='contained' color='primary' type='submit'>
           Send Post

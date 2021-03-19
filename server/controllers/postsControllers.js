@@ -1,7 +1,9 @@
-const { validationResult } = require("express-validator");
-
 const Post = require("../models/Post");
 const HttpError = require("../models/HttpError");
+const { v4: uuid4 } = require("uuid");
+const { promisify } = require("util");
+const fs = require("fs");
+const pipeline = promisify(require("stream").pipeline);
 
 /*=================================================================================================================
 get Posts
@@ -68,11 +70,6 @@ update single Post by Id
 =====================================================================================================================*/
 
 exports.updatePost = async (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return next(new HttpError("Invalid inputs passed", 422));
-  }
-
   const postId = req.params.id;
   const body = req.body;
 
@@ -93,13 +90,14 @@ send a Post
 =====================================================================================================================*/
 
 exports.sendPost = async (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return next(new HttpError("Invalid inputs passed", 422));
-  }
+  const { file } = req;
+  const fileName = uuid4() + file.detectedFileExtension;
+  await pipeline(
+    file.stream,
+    fs.createWriteStream(`${__dirname}/../public/images/${fileName}`)
+  );
 
-  const post = new Post({ ...req.body });
-
+  const post = new Post({ ...req.body, headerImage: fileName });
   let response;
   try {
     response = await post.save();

@@ -20,7 +20,10 @@ function PostOverview() {
         <div className='post' key={post.id}>
           <h2>{post.title}</h2>
           <p>{post.content}</p>
-          <img src={post.headerImage} alt={post.title} />
+          <img
+            src={`http://localhost:8080/images/${post.headerImage}`}
+            alt={post.title}
+          />
         </div>
       ));
       return posts;
