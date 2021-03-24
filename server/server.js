@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
 const postRoutes = require("./routes/postsRoutes");
+const userRoutes = require("./routes/usersRoutes");
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(bodyParser.json());
 app.use(express.static("public"));
 
 app.use("/api/posts/", postRoutes);
+app.use("/api/users/", userRoutes);
 
 app.use((error, req, res, next) => {
   if (res.headersSent) return next(error);
