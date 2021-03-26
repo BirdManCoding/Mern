@@ -5,8 +5,13 @@ const { userValidator } = require("../middlewares/userValidation");
 const router = Router();
 
 // @route   GET /api/users/register
-// @desc    sample Route
+// @desc    register Route
 // @access  Public
 router.post("/register", userValidator, userControllers.register);
+
+// @route   GET /api/users/login
+// @desc    login Route
+// @access  Public
+router.post("/login", userValidator, userControllers.login);
 
 module.exports = router;
