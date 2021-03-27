@@ -3,6 +3,7 @@ const multer = require("multer");
 
 const { postValidator } = require("../middlewares/postValidation");
 const postControllers = require("../controllers/postsControllers");
+const { isAuth } = require("../middlewares/isAuth");
 
 const router = Router();
 const upload = multer();
@@ -34,6 +35,7 @@ router.post(
   "/",
   upload.single("headerImage"),
   postValidator,
+  isAuth,
   postControllers.sendPost
 );
 
