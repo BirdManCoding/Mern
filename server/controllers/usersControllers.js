@@ -59,17 +59,7 @@ exports.login = async (req, res, next) => {
     { userId: existingUser.id },
     process.env.JWT_SECRET,
     {
-      expiresIn: "15min",
-    }
-  );
-
-  res.cookie(
-    "jid",
-    jwt.sign({ userId: existingUser.id }, process.env.JWT_REFRESH_SECRET, {
-      expiresIn: "7d",
-    }),
-    {
-      httpOnly: true,
+      expiresIn: "3h",
     }
   );
 

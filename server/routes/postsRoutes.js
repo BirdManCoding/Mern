@@ -2,7 +2,6 @@ const { Router } = require("express");
 const multer = require("multer");
 
 const { postValidator } = require("../middlewares/postValidation");
-const { isAuth } = require("../middlewares/isAuth");
 const postControllers = require("../controllers/postsControllers");
 
 const router = Router();
@@ -11,9 +10,7 @@ const upload = multer();
 // @route   GET /api/posts/ //postControllers.getPosts
 // @desc    get all Posts
 // @access  Private
-router.get("/", isAuth, (req, res, next) => {
-  res.json(`your userId ist ${req.userData.userId}`);
-});
+router.get("/", postControllers.getPosts);
 
 // @route   GET /api/posts/:id
 // @desc    get single Post by id
