@@ -1,9 +1,10 @@
-const Post = require("../models/Post");
-const HttpError = require("../models/HttpError");
 const { v4: uuid4 } = require("uuid");
 const { promisify } = require("util");
 const fs = require("fs");
 const pipeline = promisify(require("stream").pipeline);
+
+const Post = require("../models/Post");
+const HttpError = require("../models/HttpError");
 
 /*=================================================================================================================
 get Posts

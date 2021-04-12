@@ -57,15 +57,21 @@ exports.login = async (req, res, next) => {
 
   let accessToken = jwt.sign(
     { userId: existingUser.id },
-    process.env.JWT_SECRET,
-    {
-      expiresIn: "3h",
-    }
+    process.env.JWT_SECRET
   );
 
-  res.status(201).json({
-    message: "user loggedIn successfully",
-    userId: existingUser.id,
-    accessToken,
+  res.cookie("token", accessToken, {
+    httpOnly: true,
   });
+
+  res.json({ message: "cookie got send" });
+};
+
+exports.logout = async (req, res, next) => {
+  res.cookie("token", "", {
+    httpOnly: true,
+    expires: new Date(0),
+  });
+
+  res.json({ message: "cookie removed" });
 };

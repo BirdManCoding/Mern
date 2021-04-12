@@ -6,22 +6,20 @@ exports.isAuth = (req, res, next) => {
   if (req.method === "OPTIONS") {
     return next();
   }
-  console.log(req.headers.authorization);
+
   try {
-    const token = req.headers.authorization.split(" ")[1];
+    const token = req.cookies.token;
+
     if (!token) {
-      throw new Error("Auth Failed");
+      return next(new HttpError("Unauthorized", 401));
     }
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-    req.userData = { userId: decodedToken.userId };
+
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = verified.userId;
 
     next();
   } catch (err) {
-    return next(
-      new HttpError(
-        "Authentifizierung fehlgeschlagen, bitte erneut einloggen",
-        403
-      )
-    );
+    console.log(err);
+    return next(new HttpError("Unauthorized", 401));
   }
 };

@@ -1,8 +1,6 @@
-import { useReducer, useContext } from "react";
+import { useReducer } from "react";
 import { TextField, Button } from "@material-ui/core";
 import axios from "../util/axios-instance";
-
-import { AuthContext } from "../util/context/auth-context";
 
 const ACTIONS = {
   UPDATE_EMAIL: "updateEmail",
@@ -24,8 +22,6 @@ function reducer(state, action) {
 }
 
 function Login() {
-  const auth = useContext(AuthContext);
-
   const [formState, dispatch] = useReducer(reducer, {
     email: "",
     password: "",
@@ -39,13 +35,11 @@ function Login() {
       response = await axios.post("/api/users/login", {
         ...formState,
       });
+      console.log(response);
     } catch (err) {
       console.log(err.response);
     }
     dispatch({ type: ACTIONS.CLEAR_CONTENT });
-
-    const { userId, accessToken } = response.data;
-    auth.login(userId, accessToken);
   }
 
   return (

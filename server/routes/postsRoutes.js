@@ -34,8 +34,8 @@ router.patch("/:id", postValidator, postControllers.updatePost);
 router.post(
   "/",
   upload.single("headerImage"),
-  postValidator,
   isAuth,
+  postValidator,
   postControllers.sendPost
 );
 

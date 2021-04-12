@@ -1,16 +1,22 @@
 require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
-const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const cookieParser = require("cookie-parser");
 
 const postRoutes = require("./routes/postsRoutes");
 const userRoutes = require("./routes/usersRoutes");
 
 const app = express();
 
-app.use(cors());
-app.use(bodyParser.json());
+app.use(
+  cors({
+    origin: process.env.APP_URI,
+    credentials: true,
+  })
+);
+app.use(cookieParser());
+app.use(express.json());
 app.use(express.static("public"));
 
 app.use("/api/posts/", postRoutes);
