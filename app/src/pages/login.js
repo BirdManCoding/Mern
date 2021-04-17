@@ -1,6 +1,8 @@
-import { useReducer } from "react";
+import { useReducer, useContext } from "react";
 import { TextField, Button } from "@material-ui/core";
 import axios from "../util/axios-instance";
+
+import AuthContext from "../util/context/AuthContext";
 
 const ACTIONS = {
   UPDATE_EMAIL: "updateEmail",
@@ -27,15 +29,16 @@ function Login() {
     password: "",
   });
 
+  const { login } = useContext(AuthContext);
+
   async function onSubmitHandler(e) {
     e.preventDefault();
 
-    let response;
     try {
-      response = await axios.post("/api/users/login", {
+      await axios.post("/api/users/login", {
         ...formState,
       });
-      console.log(response);
+      login();
     } catch (err) {
       console.log(err.response);
     }

@@ -75,3 +75,21 @@ exports.logout = async (req, res, next) => {
 
   res.json({ message: "cookie removed" });
 };
+
+exports.loggedIn = (req, res, next) => {
+  if (req.method === "OPTIONS") {
+    return next();
+  }
+
+  try {
+    const token = req.cookies.token;
+
+    if (!token) {
+      return res.json(false);
+    }
+    jwt.verify(token, process.env.JWT_SECRET);
+    res.json(true);
+  } catch (err) {
+    return res.json(false);
+  }
+};

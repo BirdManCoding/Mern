@@ -14,9 +14,14 @@ router.post("/register", userValidator, userControllers.register);
 // @access  Public
 router.post("/login", userValidator, userControllers.login);
 
-// @route   POST /api/users/logout
+// @route   GET /api/users/logout
 // @desc    logout Route
 // @access  Public
-router.post("/logout", userControllers.logout);
+router.get("/logout", userControllers.logout);
+
+// @route   GET /api/users/loggedIn
+// @desc    logout Route
+// @access  Public
+router.get("/loggedIn", userControllers.loggedIn);
 
 module.exports = router;
