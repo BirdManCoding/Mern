@@ -2,7 +2,9 @@ const { v4: uuid4 } = require("uuid");
 const { promisify } = require("util");
 const fs = require("fs");
 const pipeline = promisify(require("stream").pipeline);
+const mongoose = require("mongoose");
 
+const User = require("../models/User");
 const Post = require("../models/Post");
 const HttpError = require("../models/HttpError");
 
@@ -98,13 +100,24 @@ exports.sendPost = async (req, res, next) => {
     fs.createWriteStream(`${__dirname}/../public/images/${fileName}`)
   );
 
-  const post = new Post({ ...req.body, headerImage: fileName });
-  let response;
+  const post = new Post({
+    ...req.body,
+    headerImage: fileName,
+    userId: req.user,
+  });
+
   try {
-    response = await post.save();
+    const user = await User.findById(req.user);
+    const session = await mongoose.startSession();
+    user.posts.push(post.id);
+
+    session.startTransaction();
+    await post.save({ session });
+    await user.save({ session });
+    await session.commitTransaction();
   } catch (err) {
     next(new HttpError(err));
   }
 
-  res.json(response);
+  res.json({ message: "post created successfully" });
 };
